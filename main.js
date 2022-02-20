@@ -1,7 +1,9 @@
 // ! Gameboard !
+
 const Gameboard = (() => {
-  const markers = ["X", "O"];
-  const gameboardArr = ["", "", "", "", "", "", "", "", ""];
+  const MARKERS = ["X", "O"];
+
+  const getBoardAsArr = () => ["", "", "", "", "", "", "", "", ""];
 
   const getWinningCombos = () => {
     return [
@@ -16,7 +18,7 @@ const Gameboard = (() => {
     ];
   };
 
-  return { markers, gameboardArr, getWinningCombos };
+  return { MARKERS, getBoardAsArr, getWinningCombos };
 })();
 
 // ! Player !
@@ -27,92 +29,91 @@ const Player = (name, marker, turn) => {
 
   const checkTurn = () => turn;
 
-  const startTurn = () => (turn = true);
+  const startTurn = () => {
+    turn = true;
+  };
 
-  const endTurn = () => (turn = false);
+  const endTurn = () => {
+    turn = false;
+  };
 
   return { getName, getMarker, checkTurn, startTurn, endTurn };
 };
 
-// ? Player Creation
+// ! Functionality of the Game
+const Game = (() => {
+  const DISPLAYBOARD = document.querySelector(".gameboard");
+  const BOARD = Gameboard.getBoardAsArr();
+  const PLAYER1 = Player("Player 1", Gameboard.MARKERS[0], true);
+  const PLAYER2 = Player("Player 2", Gameboard.MARKERS[1], false);
 
-const player1 = Player("Luke", Gameboard.markers[0], true);
-const player2 = Player("Vader", Gameboard.markers[1], false);
-
-const displayBoard = (() => {
-  const container = document.querySelector(".container");
-  let gameBoard = Gameboard.gameboardArr;
-
-  // ** Renders the gameboard
   const render = () => {
-    gameBoard.forEach((slotValue, indexOfSlot) => {
-      const slot = document.createElement("div");
-      slot.classList.add("slot");
-      slot.id = indexOfSlot;
-      slot.innerText = slotValue;
-      container.appendChild(slot);
+    BOARD.forEach((CELL) => {
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      cell.innerText = CELL;
+      DISPLAYBOARD.appendChild(cell);
     });
   };
 
-  const getInactivePlayer = () => {
-    return player1.checkTurn() ? player2 : player1;
-  };
+  const startGame = () => {
+    const CELLS = document.querySelectorAll(".cell");
+    CELLS.forEach((CELL, indexOfCell) => {
+      CELL.addEventListener("click", () => {
+        takeInput(CELL, indexOfCell);
 
-  const resetGame = () => {
-    gameBoard = ["", "", "", "", "", "", "", "", ""];
-    [...container.children].forEach((slot) => {
-      container.removeChild(slot);
-    });
-    player1.startTurn();
-    render();
-    changeDOM();
-  };
-
-  // ** Adds the markers to the slots in the gameboard
-  const changeDOM = () => {
-    [...container.childNodes].forEach((slot) => {
-      const indexOfSlot = slot.id;
-
-      slot.addEventListener("click", () => {
-        console.log(gameBoard);
-        if (!gameBoard[indexOfSlot]) {
-          if (player1.checkTurn()) {
-            gameBoard[indexOfSlot] = player1.getMarker();
-            slot.innerText = player1.getMarker();
-            player1.endTurn();
-            player2.startTurn();
-          } else if (player2.checkTurn()) {
-            gameBoard[indexOfSlot] = player2.getMarker();
-            slot.innerText = player2.getMarker();
-            player2.endTurn();
-            player1.startTurn();
-          }
-
-          // ** Resets the game after a player wins
-          if (checkWinner()) {
-            const inactivePlayer = getInactivePlayer();
-            console.log(`${inactivePlayer.getName()} wins!`);
-            setTimeout(() => {
-              resetGame();
-            }, 1750);
-          }
+        if (checkWinner()) {
+          endGame();
         }
       });
     });
   };
 
+  const takeInput = (CELL, indexOfCell) => {
+    if (BOARD[indexOfCell] === "") {
+      if (PLAYER1.checkTurn()) {
+        addMarker(PLAYER1, PLAYER2, CELL, indexOfCell);
+      } else if (PLAYER2.checkTurn()) {
+        addMarker(PLAYER2, PLAYER1, CELL, indexOfCell);
+      }
+    }
+  };
+
+  const addMarker = (CURRENTPLAYER, NEXTPLAYER, CELL, indexOfCell) => {
+    BOARD[indexOfCell] = CURRENTPLAYER.getMarker();
+    CELL.innerText = CURRENTPLAYER.getMarker();
+    CURRENTPLAYER.endTurn();
+    NEXTPLAYER.startTurn();
+  };
+
   const checkWinner = () => {
-    const winningCombos = Gameboard.getWinningCombos();
-    const inactivePlayer = getInactivePlayer();
-    return winningCombos.some((combo) => {
-      return combo.every((index) => {
-        return gameBoard[index] === inactivePlayer.getMarker();
+    const WINNINGCOMBOS = Gameboard.getWinningCombos();
+
+    const PREVIOUSMARKER = !PLAYER1.checkTurn()
+      ? PLAYER1.getMarker()
+      : PLAYER2.getMarker();
+
+    return WINNINGCOMBOS.some((combos) => {
+      return combos.every((index) => {
+        return BOARD[index] === PREVIOUSMARKER;
       });
     });
   };
 
-  return { render, changeDOM };
+  const endGame = () => {
+    console.log("Winner");
+  };
+  return { render, startGame };
 })();
 
-displayBoard.render();
-displayBoard.changeDOM();
+// ! ----------------
+
+Game.render();
+
+// ! ----------------
+
+const STARTBUTTON = document.querySelector("button");
+
+STARTBUTTON.addEventListener("click", () => {
+  Game.startGame();
+});
