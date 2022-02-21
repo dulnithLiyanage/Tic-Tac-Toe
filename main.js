@@ -43,7 +43,8 @@ const Player = (name, marker, turn) => {
 // ! Functionality of the Game
 const Game = (() => {
   const DISPLAYBOARD = document.querySelector(".gameboard");
-  const BOARD = Gameboard.getBoardAsArr();
+  let BOARD = Gameboard.getBoardAsArr();
+
   const PLAYER1 = Player("Player 1", Gameboard.MARKERS[0], true);
   const PLAYER2 = Player("Player 2", Gameboard.MARKERS[1], false);
 
@@ -63,7 +64,11 @@ const Game = (() => {
         takeInput(CELL, indexOfCell);
 
         if (checkWinner()) {
-          endGame();
+          endGame(true);
+        }
+
+        if (checkForTie()) {
+          endGame(false);
         }
       });
     });
@@ -80,8 +85,18 @@ const Game = (() => {
   };
 
   const addMarker = (CURRENTPLAYER, NEXTPLAYER, CELL, indexOfCell) => {
-    BOARD[indexOfCell] = CURRENTPLAYER.getMarker();
-    CELL.innerText = CURRENTPLAYER.getMarker();
+    const ICON = document.createElement("img");
+    const MARKER = CURRENTPLAYER.getMarker();
+
+    const CIRCLEPATH = "./icons/circle.svg";
+    const CROSSPATH = "./icons/cross.svg";
+
+    BOARD[indexOfCell] = MARKER;
+
+    MARKER === "X" ? (ICON.src = CROSSPATH) : (ICON.src = CIRCLEPATH);
+
+    CELL.appendChild(ICON);
+
     CURRENTPLAYER.endTurn();
     NEXTPLAYER.startTurn();
   };
@@ -100,20 +115,67 @@ const Game = (() => {
     });
   };
 
-  const endGame = () => {
-    console.log("Winner");
+  const checkForTie = () => {
+    return BOARD.every((CELL) => {
+      return CELL !== "";
+    });
   };
-  return { render, startGame };
+
+  const endGame = (winnerExists) => {
+    if (winnerExists) {
+      alert(
+        `${!PLAYER1.checkTurn() ? PLAYER1.getName() : PLAYER2.getName()} won`
+      );
+    } else {
+      alert("It's a tie");
+    }
+
+    REPLAYBUTTON.classList.remove("hidden");
+
+    resetGame();
+    render();
+  };
+
+  const resetGame = () => {
+    PLAYER1.startTurn(); // reset player turn
+    BOARD = Gameboard.getBoardAsArr(); // reset board
+
+    const CELLS = document.querySelectorAll(".cell");
+    CELLS.forEach((CELL) => {
+      DISPLAYBOARD.removeChild(CELL);
+    });
+  };
+
+  return { render, startGame, resetGame };
 })();
 
 // ! ----------------
 
-Game.render();
-
 // ! ----------------
 
-const STARTBUTTON = document.querySelector("button");
+const STARTBUTTON = document.querySelector(".start");
+const RETURNBUTTON = document.querySelector(".return");
+const REPLAYBUTTON = document.querySelector(".replay");
+
+const CONTAINER = document.querySelector(".container");
+const WELCOMESCREEN = document.querySelector(".welcome-screen");
 
 STARTBUTTON.addEventListener("click", () => {
+  Game.resetGame();
+  Game.render();
+  Game.startGame();
+  CONTAINER.classList.remove("hidden");
+  WELCOMESCREEN.classList.add("hidden");
+});
+
+RETURNBUTTON.addEventListener("click", () => {
+  CONTAINER.classList.add("hidden");
+  WELCOMESCREEN.classList.remove("hidden");
+});
+
+REPLAYBUTTON.addEventListener("click", () => {
+  REPLAYBUTTON.classList.add("hidden");
+  Game.resetGame();
+  Game.render();
   Game.startGame();
 });
