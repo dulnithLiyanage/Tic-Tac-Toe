@@ -8,14 +8,24 @@
     <script src="./main.js" defer></script>
   </head>
   <body>
-    <div class="container hidden">
+    <div class="gameboard-container hidden">
       <div class="gameboard"></div>
-      <button class="return">Go Back</button>
-      <button class="replay hidden">Replay</button>
+      <div class="button-container">
+        <button class="return">Go Back</button>
+      </div>
     </div>
     <div class="welcome-screen">
       <h1>Tic Tac Toe</h1>
       <button class="start">vs Player</button>
+    </div>
+    <div class="message-card-container hidden">
+      <div class="message-card">
+        <p class="message"></p>
+        <div class="button-container">
+          <button class="end-session">End Game</button>
+          <button class="replay">Replay</button>
+        </div>
+      </div>
     </div>
   </body>
 </html>
