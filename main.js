@@ -65,9 +65,7 @@ const Game = (() => {
 
         if (checkWinner()) {
           endGame(true);
-        }
-
-        if (checkForTie()) {
+        } else if (checkForTie()) {
           endGame(false);
         }
       });
@@ -126,14 +124,11 @@ const Game = (() => {
       MESSAGE.innerText = ` Congratulations "${
         !PLAYER1.checkTurn() ? PLAYER1.getName() : PLAYER2.getName()
       }" Won 🥳`;
-    } else {
+    } else if (!winnerExists) {
       MESSAGE.innerText = "It's a tie 😅";
     }
 
     MESSAGECARD.classList.remove("hidden");
-
-    resetGame();
-    render();
   };
 
   const resetGame = () => {
