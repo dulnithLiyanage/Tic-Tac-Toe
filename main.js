@@ -149,27 +149,25 @@ const Game = (() => {
   return { render, startGame, resetGame };
 })();
 
-// ! ----------------
-
-// ! ----------------
+// ! -------------------------------------------------- !
 
 const STARTBUTTON = document.querySelector(".start");
 const RETURNBUTTON = document.querySelector(".return");
 const REPLAYBUTTON = document.querySelector(".replay");
 
-const CONTAINER = document.querySelector(".container");
+const GAMECONTAINER = document.querySelector(".container");
 const WELCOMESCREEN = document.querySelector(".welcome-screen");
 
 STARTBUTTON.addEventListener("click", () => {
   Game.resetGame();
   Game.render();
   Game.startGame();
-  CONTAINER.classList.remove("hidden");
+  GAMECONTAINER.classList.remove("hidden");
   WELCOMESCREEN.classList.add("hidden");
 });
 
 RETURNBUTTON.addEventListener("click", () => {
-  CONTAINER.classList.add("hidden");
+  GAMECONTAINER.classList.add("hidden");
   WELCOMESCREEN.classList.remove("hidden");
 });
 
@@ -179,3 +177,5 @@ REPLAYBUTTON.addEventListener("click", () => {
   Game.render();
   Game.startGame();
 });
+
+// ! -------------------------------------------------- !
