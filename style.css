@@ -17,6 +17,10 @@ body {
   flex-direction: column;
 }
 
+.hidden {
+  display: none;
+}
+
 .gameboard {
   width: var(--gameboard-size);
   height: var(--gameboard-size);
@@ -32,4 +36,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+i {
+  font-size: 3rem;
 }
