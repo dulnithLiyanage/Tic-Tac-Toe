@@ -123,14 +123,14 @@ const Game = (() => {
 
   const endGame = (winnerExists) => {
     if (winnerExists) {
-      alert(
-        `${!PLAYER1.checkTurn() ? PLAYER1.getName() : PLAYER2.getName()} won`
-      );
+      MESSAGE.innerText = ` Congratulations "${
+        !PLAYER1.checkTurn() ? PLAYER1.getName() : PLAYER2.getName()
+      }" Won 🥳`;
     } else {
-      alert("It's a tie");
+      MESSAGE.innerText = "It's a tie 😅";
     }
 
-    REPLAYBUTTON.classList.remove("hidden");
+    MESSAGECARD.classList.remove("hidden");
 
     resetGame();
     render();
@@ -154,28 +154,37 @@ const Game = (() => {
 const STARTBUTTON = document.querySelector(".start");
 const RETURNBUTTON = document.querySelector(".return");
 const REPLAYBUTTON = document.querySelector(".replay");
+const ENDGAMEBUTTON = document.querySelector(".end-session");
 
-const GAMECONTAINER = document.querySelector(".container");
+const GAMEBOARDCONTAINER = document.querySelector(".gameboard-container");
 const WELCOMESCREEN = document.querySelector(".welcome-screen");
+const MESSAGECARD = document.querySelector(".message-card-container");
+const MESSAGE = document.querySelector(".message");
 
 STARTBUTTON.addEventListener("click", () => {
   Game.resetGame();
   Game.render();
   Game.startGame();
-  GAMECONTAINER.classList.remove("hidden");
+  GAMEBOARDCONTAINER.classList.remove("hidden");
   WELCOMESCREEN.classList.add("hidden");
 });
 
 RETURNBUTTON.addEventListener("click", () => {
-  GAMECONTAINER.classList.add("hidden");
+  GAMEBOARDCONTAINER.classList.add("hidden");
   WELCOMESCREEN.classList.remove("hidden");
 });
 
 REPLAYBUTTON.addEventListener("click", () => {
-  REPLAYBUTTON.classList.add("hidden");
+  MESSAGECARD.classList.add("hidden");
   Game.resetGame();
   Game.render();
   Game.startGame();
+});
+
+ENDGAMEBUTTON.addEventListener("click", () => {
+  MESSAGECARD.classList.add("hidden");
+  GAMEBOARDCONTAINER.classList.add("hidden");
+  WELCOMESCREEN.classList.remove("hidden");
 });
 
 // ! -------------------------------------------------- !
