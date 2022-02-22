@@ -76,8 +76,10 @@ const Game = (() => {
     if (BOARD[indexOfCell] === "") {
       if (PLAYER1.checkTurn()) {
         addMarker(PLAYER1, PLAYER2, CELL, indexOfCell);
+        TURN.innerText = `${PLAYER2.getName()}'s turn`;
       } else if (PLAYER2.checkTurn()) {
         addMarker(PLAYER2, PLAYER1, CELL, indexOfCell);
+        TURN.innerText = `${PLAYER1.getName()}'s turn`;
       }
     }
   };
@@ -128,10 +130,12 @@ const Game = (() => {
       MESSAGE.innerText = "It's a tie 😅";
     }
 
+    TURN.innerText = "";
     MESSAGECARD.classList.remove("hidden");
   };
 
   const resetGame = () => {
+    TURN.innerText = `${PLAYER1.getName()}'s turn`; // Reset the turn message
     PLAYER1.startTurn(); // reset player turn
     BOARD = Gameboard.getBoardAsArr(); // reset board
 
@@ -152,6 +156,7 @@ const REPLAYBUTTON = document.querySelector(".replay");
 const ENDGAMEBUTTON = document.querySelector(".end-session");
 
 const GAMEBOARDCONTAINER = document.querySelector(".gameboard-container");
+const TURN = GAMEBOARDCONTAINER.firstElementChild;
 const WELCOMESCREEN = document.querySelector(".welcome-screen");
 const MESSAGECARD = document.querySelector(".message-card-container");
 const MESSAGE = document.querySelector(".message");
