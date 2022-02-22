@@ -9,10 +9,12 @@
 }
 
 :root {
-  --gameboard-size: 330px;
+  --gameboard-size: 320px;
   --cell-color: #e2e8f0;
   --font-primary: "roboto", sans-serif;
   --font-header: "retro computer", monospace;
+  --standard-button-font-size: calc(0.65vmin + 16px);
+  --standard-text-font-size: calc(0.75vmin + 16px);
 }
 
 * {
@@ -26,11 +28,11 @@ body {
 
 button {
   border: none;
-  padding: 1em;
+  padding: 0.75em;
   margin: 2em 1em;
   font-family: var(--font-primary);
   border-radius: 5px;
-  font-size: 15px;
+  font-size: var(--standard-button-font-size-size);
 }
 
 button:hover {
@@ -49,7 +51,7 @@ button:hover {
 
 .welcome-screen h1 {
   font-family: var(--font-header);
-  font-size: 84px;
+  font-size: calc(5vmax + 16px);
 }
 
 .hidden {
@@ -65,8 +67,9 @@ button:hover {
   flex-direction: column;
 }
 
-.gameboard-container h1 {
+.gameboard-container .turn {
   font-family: var(--font-header);
+  font-size: calc(2.5vmin + 16px);
   letter-spacing: 2px;
   word-spacing: 4px;
   margin-bottom: 1.25em;
@@ -123,5 +126,5 @@ button:hover {
 }
 
 .message-card-container .message-card .message {
-  font-size: 19px;
+  font-size: var(--standard-text-font-size);
 }
