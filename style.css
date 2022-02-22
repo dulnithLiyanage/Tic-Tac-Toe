@@ -1,7 +1,18 @@
+@font-face {
+  font-family: "retro computer";
+  src: url(./fonts/retro_computer.ttf);
+}
+
+@font-face {
+  font-family: "roboto";
+  src: url(./fonts/Roboto-Regular.ttf);
+}
+
 :root {
   --gameboard-size: 330px;
   --cell-color: #e2e8f0;
-  --font-primary: "Roboto", sans-serif;
+  --font-primary: "roboto", sans-serif;
+  --font-header: "retro computer", monospace;
 }
 
 * {
@@ -22,6 +33,10 @@ button {
   font-size: 15px;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 .welcome-screen {
   width: 100%;
   height: 100vh;
@@ -33,6 +48,7 @@ button {
 }
 
 .welcome-screen h1 {
+  font-family: var(--font-header);
   font-size: 84px;
 }
 
@@ -47,6 +63,13 @@ button {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.gameboard-container h1 {
+  font-family: var(--font-header);
+  letter-spacing: 2px;
+  word-spacing: 4px;
+  margin-bottom: 1.25em;
 }
 
 .gameboard {
@@ -64,6 +87,10 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.cell:hover {
+  cursor: pointer;
 }
 
 .button-container {
