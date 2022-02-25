@@ -45,6 +45,10 @@ const Game = (() => {
   const DISPLAYBOARD = document.querySelector(".gameboard");
   let BOARD = Gameboard.getBoardAsArr();
 
+  let available = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // Available indexes for the AI
+
+  console.log(available);
+
   const PLAYER1 = Player("Player 1", Gameboard.MARKERS[0], true);
   const PLAYER2 = Player("Player 2", Gameboard.MARKERS[1], false);
 
@@ -57,7 +61,7 @@ const Game = (() => {
     });
   };
 
-  const startGame = () => {
+  const startGameAgainstHuman = () => {
     const CELLS = document.querySelectorAll(".cell");
     CELLS.forEach((CELL, indexOfCell) => {
       CELL.addEventListener("click", () => {
@@ -70,6 +74,43 @@ const Game = (() => {
         }
       });
     });
+  };
+
+  const startGameAgainstComputer = () => {
+    const CELLS = document.querySelectorAll(".cell");
+    CELLS.forEach((CELL, indexOfCell) => {
+      CELL.addEventListener("mousedown", () => {
+        if (PLAYER1.checkTurn()) {
+          takeInput(CELL, indexOfCell);
+        }
+
+        if (checkWinner()) {
+          endGame(true);
+        } else if (checkForTie()) {
+          endGame(false);
+        }
+      });
+
+      CELL.addEventListener("mouseup", () => {
+        if (PLAYER2.checkTurn()) {
+          easyAI(CELLS);
+        }
+
+        if (checkWinner()) {
+          endGame(true);
+        } else if (checkForTie()) {
+          endGame(false);
+        }
+      });
+    });
+  };
+
+  const easyAI = (CELLS) => {
+    let randomIndex = Math.floor(Math.random() * available.length);
+
+    let randomCell = available.splice(randomIndex, 1);
+
+    takeInput(CELLS[randomCell], randomCell);
   };
 
   const takeInput = (CELL, indexOfCell) => {
@@ -93,6 +134,11 @@ const Game = (() => {
 
     BOARD[indexOfCell] = MARKER;
 
+    // Removes the index from the available array used by the AI
+    if (PLAYER1.checkTurn()) {
+      available.splice(available.indexOf(indexOfCell), 1);
+    }
+
     MARKER === "X" ? (ICON.src = CROSSPATH) : (ICON.src = CIRCLEPATH);
 
     CELL.appendChild(ICON);
@@ -104,6 +150,7 @@ const Game = (() => {
   const checkWinner = () => {
     const WINNINGCOMBOS = Gameboard.getWinningCombos();
 
+    // gets the mark of the previous player
     const PREVIOUSMARKER = !PLAYER1.checkTurn()
       ? PLAYER1.getMarker()
       : PLAYER2.getMarker();
@@ -139,18 +186,21 @@ const Game = (() => {
     PLAYER1.startTurn(); // reset player turn
     BOARD = Gameboard.getBoardAsArr(); // reset board
 
+    available = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // reset available indexes
+
+    // Removes the previous markers
     const CELLS = document.querySelectorAll(".cell");
     CELLS.forEach((CELL) => {
       DISPLAYBOARD.removeChild(CELL);
     });
   };
-
-  return { render, startGame, resetGame };
+  return { render, startGameAgainstHuman, startGameAgainstComputer, resetGame };
 })();
 
 // ! -------------------------------------------------- !
 
-const STARTBUTTON = document.querySelector(".start");
+const VSPLAYER = document.querySelector(".start");
+const VSCOMPUTER = document.querySelector(".start-computer");
 const RETURNBUTTON = document.querySelector(".return");
 const REPLAYBUTTON = document.querySelector(".replay");
 const ENDGAMEBUTTON = document.querySelector(".end-session");
@@ -161,10 +211,18 @@ const WELCOMESCREEN = document.querySelector(".welcome-screen");
 const MESSAGECARD = document.querySelector(".message-card-container");
 const MESSAGE = document.querySelector(".message");
 
-STARTBUTTON.addEventListener("click", () => {
+VSPLAYER.addEventListener("click", () => {
   Game.resetGame();
   Game.render();
-  Game.startGame();
+  Game.startGameAgainstHuman();
+  GAMEBOARDCONTAINER.classList.remove("hidden");
+  WELCOMESCREEN.classList.add("hidden");
+});
+
+VSCOMPUTER.addEventListener("click", () => {
+  Game.resetGame();
+  Game.render();
+  Game.startGameAgainstComputer();
   GAMEBOARDCONTAINER.classList.remove("hidden");
   WELCOMESCREEN.classList.add("hidden");
 });
@@ -178,7 +236,7 @@ REPLAYBUTTON.addEventListener("click", () => {
   MESSAGECARD.classList.add("hidden");
   Game.resetGame();
   Game.render();
-  Game.startGame();
+  Game.startGameAgainstComputer();
 });
 
 ENDGAMEBUTTON.addEventListener("click", () => {
