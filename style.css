@@ -90,10 +90,15 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 3em;
 }
 
 .cell:hover {
   cursor: pointer;
+}
+
+.cell img {
+  width: 60px;
 }
 
 .button-container {
