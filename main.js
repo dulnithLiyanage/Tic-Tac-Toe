@@ -217,6 +217,13 @@ VSPLAYER.addEventListener("click", () => {
   Game.startGameAgainstHuman();
   GAMEBOARDCONTAINER.classList.remove("hidden");
   WELCOMESCREEN.classList.add("hidden");
+
+  REPLAYBUTTON.addEventListener("click", () => {
+    MESSAGECARD.classList.add("hidden");
+    Game.resetGame();
+    Game.render();
+    Game.startGameAgainstHuman();
+  });
 });
 
 VSCOMPUTER.addEventListener("click", () => {
@@ -225,18 +232,18 @@ VSCOMPUTER.addEventListener("click", () => {
   Game.startGameAgainstComputer();
   GAMEBOARDCONTAINER.classList.remove("hidden");
   WELCOMESCREEN.classList.add("hidden");
+
+  REPLAYBUTTON.addEventListener("click", () => {
+    MESSAGECARD.classList.add("hidden");
+    Game.resetGame();
+    Game.render();
+    Game.startGameAgainstComputer();
+  });
 });
 
 RETURNBUTTON.addEventListener("click", () => {
   GAMEBOARDCONTAINER.classList.add("hidden");
   WELCOMESCREEN.classList.remove("hidden");
-});
-
-REPLAYBUTTON.addEventListener("click", () => {
-  MESSAGECARD.classList.add("hidden");
-  Game.resetGame();
-  Game.render();
-  Game.startGameAgainstComputer();
 });
 
 ENDGAMEBUTTON.addEventListener("click", () => {
